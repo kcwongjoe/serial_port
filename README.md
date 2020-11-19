@@ -1,4 +1,6 @@
-# SerialPortUtils - A window based serial port library in c++
+# SerialPortUtils
+
+A window based serial port library in c++.
 
 ## Features
 * Get COM port list in firendly names
@@ -32,7 +34,7 @@ serialPort.close();
 
 # Looper
 
-Looper is a loop thread worked in detach mode which make serial port life cycle wasy to handle.
+Looper is a loop thread worked in detach mode which makes serial port life cycle easy to handle.
 
 ## Usage
 
@@ -50,7 +52,7 @@ serialPortLooper.setEndOfChar('\n');
 //    Add a start process which will try to connect serial port
 serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort> &serialport) {
     if (!serialport->isOpened())
-        serialport->open(0);
+        serialport->open(1); // Try to open COM1
 });
 
 //    Add a read string linr process to count the number of line received.
@@ -78,7 +80,7 @@ void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
 ## Looper Flow chart
-![Looper](doc\looper.png)
+![Looper](doc/looper.png)
 
 # Requirements
 
