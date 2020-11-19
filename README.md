@@ -61,14 +61,16 @@ serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort
 //  --- Add a send process ---
 bool sendString = false; // Set as true to send string. After sent, it will return to false.
 serialPortLooper->setSendStringPreProcess([&sendString]() {
-    std::string sendascii;
+    std::string sendAscii;
 
     // If user set sendString as true, send "Do your job!" to serial port.
     if (sendString) 
     {
-        sendascii = "Do your job!";
+        sendAscii = "Do your job!";
         sendString = false;
     }
+
+    return sendAscii;
 });
 
 //  --- Add a read string line process --- 
