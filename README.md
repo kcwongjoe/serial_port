@@ -2,7 +2,7 @@
 
 A window based serial port library in c++.
 
-## Features
+### Features
 * Get COM port list in firendly names
 * A looper to handle the serial port life cycle
 
@@ -38,7 +38,7 @@ serialPort.close();
 
 Looper is a loop thread worked in detach mode which makes serial port life cycle easy to handle.
 
-## Usage
+### Usage
 
 ```cpp
 #include <serial_port_looper.h>
@@ -69,7 +69,7 @@ serialPortLooper.start();
 serialPortLooper.stop(); // The stop() is work in sync mode. To stop in async, use stop(true)
 ```
 
-## Process types
+### Process types
 
 ```cpp
 void SerialProcess(std::unique_ptr<SerialPort> &serialPort);
@@ -81,7 +81,7 @@ void ReadStringProcess(std::string buffer);
 void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
-## Looper flow chart
+### Looper flow chart
 ![Looper](docs/looper.png)
 
 # Requirements
@@ -90,7 +90,7 @@ Minimum C++ 11
 
 # Installation
 
-## Cmake
+### Cmake
 
 1. Create **libs** folder in you project
 2. Clone this repository into the **libs** folder
@@ -106,7 +106,7 @@ Minimum C++ 11
            serial_port
    )
    ```
-## Installation for dummy
+### For dummy
 1. Copy all files inside **src** folder and **include/serial_port** folder to your project.
 
 # license
