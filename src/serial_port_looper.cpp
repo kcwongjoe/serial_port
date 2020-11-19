@@ -146,14 +146,17 @@ namespace SerialPortUtils
                         // Send Byte Pre-Process
                         std::pair<unsigned char*, int> sendBuffer = m_sendBytePreProcess();
 
-                        // Send Bytes
-                        int n = m_serialPort->sendBytes(sendBuffer.first, sendBuffer.second);
-
-                        // Send Byte Post-Process
-                        if (m_sendPostProcess != nullptr)
-                        {
-                            m_sendPostProcess(n);
+                        int n = 0;
+                        if (sendBuffer.second != 0) 
+                            {
+                            // Send Bytes
+                            n = m_serialPort->sendBytes(sendBuffer.first, sendBuffer.second);
                         }
+                        // Send Byte Post-Process
+                            if (m_sendPostProcess != nullptr)
+                            {
+                                m_sendPostProcess(n);
+                            }
 
                         // Clear byte buffer
                         if (m_clearSendByteBuffer)
@@ -166,8 +169,12 @@ namespace SerialPortUtils
                         // Send String Pre-Process
                         std::string sendBuffer = m_sendStringPreProcess();
 
-                        // Send String
-                        bool sent = m_serialPort->sendASCII(sendBuffer);
+                        bool sent = false;
+                        if (!sendBuffer.empty())
+                        {
+                            // Send String
+                            sent = m_serialPort->sendASCII(sendBuffer);
+                        }
 
                         // Send String Post-Process
                         if (m_sendPostProcess != nullptr)

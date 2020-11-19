@@ -45,27 +45,42 @@ Looper is a loop thread worked in detach mode which makes serial port life cycle
 
 using namespace SerialPortUtils;
 
-// Create looper
+// ****** Create looper ******
 SerialPortLooper serialPortLooper;
 serialPortLooper.getSerialPort().setBaudRate(9600);
 serialPortLooper.setEndOfChar('\n');
 
-// Add processes
-//    Add a start process which will try to connect serial port
+// ****** Add processes ******
+//  --- Add a start process ---
 serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort> &serialport) {
+    // Try to connect serial port
     if (!serialport->isOpened())
         serialport->open(1); // Try to open COM1
 });
 
-//    Add a read string line process to count the number of line received.
+//  --- Add a send process ---
+bool sendString = false; // Set as true to send string. After sent, it will return to false.
+serialPortLooper->setSendStringPreProcess([&sendString]() {
+    std::string sendascii;
+
+    // If user set sendString as true, send "Do your job!" to serial port.
+    if (sendString) 
+    {
+        sendascii = "Do your job!";
+        sendString = false;
+    }
+});
+
+//  --- Add a read string line process --- 
 serialPortLooper->setReadStringLineProcess([](std::vector<std::string> buffer) {
+    // count the number of line received.
     std::cout << "Number of line read: " + std::to_string(buffer.size()) << std::endl;
 });
 
-// Start
+// ****** Start ******
 serialPortLooper.start();
 
-// Stop
+// ****** Stop ******
 serialPortLooper.stop(); // The stop() is work in sync mode. To stop in async, use stop(true)
 ```
 
@@ -81,7 +96,7 @@ void ReadStringProcess(std::string buffer);
 void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
-### Looper flow chart
+### Flow chart
 ![Looper](docs/looper.png)
 
 # Requirements
