@@ -32,6 +32,8 @@ std::string receivedASCII = serialPort.readASCII(1024);
 serialPort.close();
 ```
 
+*For more details, please refer to the [Documentation](http://kcwongjoe.com/serial_port/index.html)*
+
 # Looper
 
 Looper is a loop thread worked in detach mode which makes serial port life cycle easy to handle.
@@ -55,9 +57,9 @@ serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort
         serialport->open(1); // Try to open COM1
 });
 
-//    Add a read string linr process to count the number of line received.
+//    Add a read string line process to count the number of line received.
 serialPortLooper->setReadStringLineProcess([](std::vector<std::string> buffer) {
-    std::cout << "Number of read lines: " + std::to_string(buffer.size()) << std::endl;
+    std::cout << "Number of line read: " + std::to_string(buffer.size()) << std::endl;
 });
 
 // Start
@@ -80,7 +82,7 @@ void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
 ## Looper flow chart
-![Looper](doc/looper.png)
+![Looper](docs/looper.png)
 
 # Requirements
 
@@ -104,7 +106,7 @@ Minimum C++ 11
            serial_port
    )
    ```
-## Dummy installation
+## Installation for dummy
 1. Copy all files inside **src** folder and **include/serial_port** folder to your project.
 
 # license

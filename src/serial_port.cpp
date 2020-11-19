@@ -7,7 +7,7 @@ namespace SerialPortUtils
 	/**
 	 * @brief Collect serial ports information by QueryDosDevice
 	 * 
-	 * @detail
+	 * @details
 	 * 1. Use QueryDosDevice() to collect all hardware names.
 	 * 2. Search serial port on hardware names which start with "COM" 
 	 * 3. Use QueryDosDevice() to get the serial port name
