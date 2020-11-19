@@ -64,7 +64,7 @@ serialPortLooper->setReadStringLineProcess([](std::vector<std::string> buffer) {
 serialPortLooper.start();
 
 // Stop
-serialPortLooper.stop();
+serialPortLooper.stop(); // The stop() is work in sync mode. To stop in async, use stop(true)
 ```
 
 ## Process types
@@ -79,7 +79,7 @@ void ReadStringProcess(std::string buffer);
 void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
-## Looper Flow chart
+## Looper flow chart
 ![Looper](doc/looper.png)
 
 # Requirements
@@ -91,7 +91,7 @@ Minimum C++ 11
 ## Cmake
 
 1. Create **libs** folder in you project
-2. Clone this repository in the **libs** folder
+2. Clone this repository into the **libs** folder
    ```
    git clone https://github.com/kcwongjoe/serial_port.git
    ```
@@ -105,7 +105,7 @@ Minimum C++ 11
    )
    ```
 ## Dummy installation
-1. Copy all files inside **src** folder and **include** folder to your project.
+1. Copy all files inside **src** folder and **include/serial_port** folder to your project.
 
 # license
-Copyright (c) 2020 JOE Wong
+This project is licensed under [MIT](LICENSE) license.
