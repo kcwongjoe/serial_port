@@ -31,7 +31,7 @@ std::string receivedASCII = serialPort.readASCII(1024);
 // Close Serial Port
 serialPort.close();
 ```
-
+ 
 *For more details, please refer to the [Documentation](http://kcwongjoe.com/serial_port/index.html)*
 
 # Looper
