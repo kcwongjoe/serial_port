@@ -59,6 +59,7 @@
         "xutility": "cpp",
         "filesystem": "cpp",
         "fstream": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "sstream": "cpp"
     }
 }

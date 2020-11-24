@@ -30,6 +30,20 @@ namespace SerialPortUtils
         std::string friendlyName = "";      /* Friendly Name */
     };
 
+    /**
+     * @brief A class to control the serial port.
+     * 
+     * @details
+     * Default setting: 
+     * BaudRate = 9600
+     * Byte Size = 8
+     * Stop Bits = 1
+     * Parity = No parity
+     * Flow Control = None
+     * End Of Char = 0
+     * Timeout = 50ms
+     * 
+     */
     class SerialPort
     {
     public:
@@ -153,16 +167,16 @@ namespace SerialPortUtils
          * @code{.cpp}
          * // Print all hardware FriendlyName values
          * int numOfValues = Utils::processRegistryValue(HKEY_LOCAL_MACHINE,
-         *			"SYSTEM\\CurrentControlSet\\Enum",
-        *			[](std::string valueName, DWORD dataType, unsigned char* data, int dataLen)
-        *			{
-        *				if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ)
-        *				{
-        *					// Found and convert to string, add to result
-        *					std::string dataString(reinterpret_cast<char*>(data), dataLen);
-        *					std::cout << dataString;
-        *				}
-        *			}
+         *            "SYSTEM\\CurrentControlSet\\Enum",
+        *            [](std::string valueName, DWORD dataType, unsigned char* data, int dataLen)
+        *            {
+        *                if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ)
+        *                {
+        *                    // Found and convert to string, add to result
+        *                    std::string dataString(reinterpret_cast<char*>(data), dataLen);
+        *                    std::cout << dataString;
+        *                }
+        *            }
         * );
         * @endcode
         * 
@@ -190,7 +204,7 @@ namespace SerialPortUtils
                 DWORD numOfValue;
                 DWORD maxValueNameSize = 0;
                 DWORD maxValueSize = 0;
-                DWORD retCode = RegQueryInfoKey(hKey, nullptr, nullptr, nullptr, &numOfSubKey, &maxSubKeySize, nullptr, &numOfValue, &maxValueNameSize, &maxValueSize, nullptr,	nullptr);
+                DWORD retCode = RegQueryInfoKey(hKey, nullptr, nullptr, nullptr, &numOfSubKey, &maxSubKeySize, nullptr, &numOfValue, &maxValueNameSize, &maxValueSize, nullptr,    nullptr);
 
                 // Get value in current key
                 if (numOfValue > 0)
@@ -231,7 +245,7 @@ namespace SerialPortUtils
                             }
 
                             // Update counter
-                            result++;				
+                            result++;                
                         }
                     }
                 }
@@ -264,7 +278,7 @@ namespace SerialPortUtils
                             
                         }
                     }
-                }			
+                }            
             }
 
             // Close

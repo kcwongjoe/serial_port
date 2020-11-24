@@ -1,9 +1,11 @@
+#include "eg1_print_ports.h"
+
 #include <serial_port.h>
 #include <iostream>
 
 using namespace SerialPortUtils;
 
-int main(int argc, char *argv[])
+void eg1_print_ports()
 {
     // Get all COM port
     std::vector<SerialPortInfo> comPorts = SerialPort::getSerialPortList();

@@ -28,7 +28,9 @@ else()
     # ---Build example---
 
     # Add examples
+    LIST(APPEND SERIALPORT_SOURCES_FILES "./examples/example.cpp")
     LIST(APPEND SERIALPORT_SOURCES_FILES "./examples/eg1_print_ports.cpp")
+    LIST(APPEND SERIALPORT_SOURCES_FILES "./examples/eg2_read.cpp")
 
     # Add sources files
     add_executable(${PROJECT_NAME} ${SERIALPORT_SOURCES_FILES})
@@ -37,5 +39,6 @@ else()
     target_include_directories(${PROJECT_NAME}
         PRIVATE 
             ${PROJECT_SOURCE_DIR}/include/serial_port
+            ${PROJECT_SOURCE_DIR}/examples
     )
 endif()

@@ -52,7 +52,7 @@ serialPortLooper.setEndOfChar('\n');
 
 // ****** Add processes ******
 //  --- Add a start process ---
-serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort> &serialport) {
+serialPortLooper.setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort> &serialport) {
     // Try to connect serial port
     if (!serialport->isOpened())
         serialport->open(1); // Try to open COM1
@@ -60,7 +60,7 @@ serialPortLooper->setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort
 
 //  --- Add a send process ---
 bool sendString = false; // Set as true to send string. After sent, it will return to false.
-serialPortLooper->setSendStringPreProcess([&sendString]() {
+serialPortLooper.setSendStringPreProcess([&sendString]() {
     std::string sendAscii;
 
     // If user set sendString as true, send "Do your job!" to serial port.
@@ -74,7 +74,7 @@ serialPortLooper->setSendStringPreProcess([&sendString]() {
 });
 
 //  --- Add a read string line process --- 
-serialPortLooper->setReadStringLineProcess([](std::vector<std::string> buffer) {
+serialPortLooper.setReadStringLineProcess([](std::vector<std::string> buffer) {
     // count the number of line received.
     std::cout << "Number of line read: " + std::to_string(buffer.size()) << std::endl;
 });
@@ -100,6 +100,15 @@ void ReadStringLineProcess(std::vector<std::string> buffer);
 
 ### Flow chart
 ![Looper](docs/looper.png)
+
+# Default settings
+* BaudRate = 9600
+* Byte Size = 8
+* Stop Bits = 1
+* Parity = No parity
+* Flow Control = None
+* End Of Char = 0
+* Timeout = 50ms
 
 # Requirements
 
