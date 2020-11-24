@@ -7,21 +7,35 @@ if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     set(SERIALPORT_AS_SUBDIRECTORY TRUE)
 endif()
 
-# Source files
+# Create source files list
 set(SERIALPORT_SOURCES_FILES)
 LIST(APPEND SERIALPORT_SOURCES_FILES "./src/serial_port.cpp")
 LIST(APPEND SERIALPORT_SOURCES_FILES "./src/serial_port_looper.cpp")
 
 # Add source files and link
 if (${SERIALPORT_AS_SUBDIRECTORY})
-    # Static library
+    # ---Static library---
+
+    # Add sources files to library
     add_library(${PROJECT_NAME} STATIC ${SERIALPORT_SOURCES_FILES})
 
+    # Link header files
     target_include_directories(${PROJECT_NAME}
         PUBLIC 
             ${PROJECT_SOURCE_DIR}/include/serial_port
     )
 else()
-    # executable
+    # ---Build example---
+
+    # Add examples
+    LIST(APPEND SERIALPORT_SOURCES_FILES "./examples/eg1_print_ports.cpp")
+
+    # Add sources files
     add_executable(${PROJECT_NAME} ${SERIALPORT_SOURCES_FILES})
+
+    # Link header files
+    target_include_directories(${PROJECT_NAME}
+        PRIVATE 
+            ${PROJECT_SOURCE_DIR}/include/serial_port
+    )
 endif()

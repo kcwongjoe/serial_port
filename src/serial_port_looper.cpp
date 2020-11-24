@@ -789,7 +789,7 @@ namespace SerialPortUtils
 
 #pragma endregion Getter and Setter
 
-#pragma Utils
+#pragma region Utils
 
     /**
      * @brief Split string by delimiter
@@ -818,6 +818,6 @@ namespace SerialPortUtils
         return tokenized;
     }
 
-#pragma
+#pragma endregion 
 
 }

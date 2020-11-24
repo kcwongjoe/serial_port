@@ -56,6 +56,9 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "filesystem": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp"
     }
 }
