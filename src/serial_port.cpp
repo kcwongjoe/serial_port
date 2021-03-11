@@ -867,10 +867,20 @@ namespace SerialPortUtils
 		return result;
 	}
 
+		/**
+	 * @brief Read ASCII from serial port. Buffer size = 1024 byte
+	 *
+	 * @return Return the ASCII string. If connection fail or no bytes collected, return a empty string.
+	 */
+	std::string SerialPort::readASCII()
+	{
+		return readASCII(1024);
+	}
+
 	/**
 	 * @brief Read ASCII from serial port
 	 *
-	 * @param[in] strBufferSize Buffer size to be read
+	 * @param[in] strBufferSize Buffer size to be read in byte
 	 * @return Return the ASCII string. If connection fail or no bytes collected, return a empty string.
 	 */
 	std::string SerialPort::readASCII(int strBufferSize)

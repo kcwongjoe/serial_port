@@ -95,6 +95,7 @@ namespace SerialPortUtils
         bool sendASCII(std::string ascii);
         int sendBytes(unsigned char* buffer, int bufferSize);
 
+        std::string readASCII();
         std::string readASCII(int bufferSize);
         int readBytes(unsigned char* buffer, int bufferSize);
 

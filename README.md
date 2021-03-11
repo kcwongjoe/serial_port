@@ -1,3 +1,7 @@
+![C++](https://img.shields.io/badge/c++->=11-blue)
+![Platform](https://img.shields.io/badge/platform-Window-lightgrey)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 # SerialPortUtils
 
 A window based serial port library in c++.
@@ -6,12 +10,25 @@ A window based serial port library in c++.
 * Get COM port list in firendly names
 * A looper to handle the serial port life cycle
 
-# Usage
+# Table of content
+
+- [Example](#Example)
+- [Installation](#Installation)
+    - [CMake](#CMake)
+    - [For Dummy](#For-Dummy)  
+- [Looper](#Looper)
+    - [Example](#looperexample)
+    - [Process types](#Process-types)
+    - [Flow chart](#Flow-chart)  
+- [Default settings](#Default-settings)
+
+
+# Example
 
 ```cpp
 #include <serial_port.h>
 
-using namespace SerialPortUtils;
+using namespace SerialPortUtils; // Using namespace is a bad practice. Don't use in your code.
 
 // Get all COM port
 std::vector<SerialPortInfo> comPorts = SerialPort::getSerialPortList();
@@ -26,24 +43,46 @@ serialPort.open(comPorts[0].port);
 serialPort.sendASCII("Do your job!!");
 
 // Read ASCII
-std::string receivedASCII = serialPort.readASCII(1024);
+std::string receivedASCII = serialPort.readASCII();
 
 // Close Serial Port
 serialPort.close();
 ```
  
-*For more details, please refer to the [Documentation](http://kcwongjoe.com/serial_port/index.html)*
+*For more details, please refer to the [Documentation](http://kcwongjoe.code.com/serial_port/index.html)*
+
+
+# Installation
+
+## Cmake
+
+1. Create **libs** folder in you project
+2. Clone this repository into the **libs** folder
+   ```
+   git clone https://github.com/kcwongjoe/serial_port.git
+   ```
+3. Add the code in your project *CMakeLists.txt*
+   ```
+   # Serial port library
+   add_subdirectory(./libs/serial_port)
+   target_link_libraries(${PROJECT_NAME}
+       PRIVATE
+           serial_port
+   )
+   ```
+## For dummy
+1. Copy all files inside **src** folder and **include/serial_port** folder to your project.
 
 # Looper
 
-Looper is a loop thread worked in detach mode which makes serial port life cycle easy to handle.
+Looper is a looping thread worked in detach mode which makes serial port life cycle easy to handle.
 
-### Usage
+## <a name="looperexample" id="looperexample"></a>Example
 
 ```cpp
 #include <serial_port_looper.h>
 
-using namespace SerialPortUtils;
+using namespace SerialPortUtils; // Using namespace is a bad practice. Don't use in your code.
 
 // ****** Create looper ******
 SerialPortLooper serialPortLooper;
@@ -59,7 +98,7 @@ serialPortLooper.setStartProcess([](std::unique_ptr<SerialPortUtils::SerialPort>
 });
 
 //  --- Add a send process ---
-bool sendString = false; // Set as true to send string. After sent, it will return to false.
+bool sendString = false; // Everytime you set as true, message will be sent. After sent, it will return to false.
 serialPortLooper.setSendStringPreProcess([&sendString]() {
     std::string sendAscii;
 
@@ -82,11 +121,17 @@ serialPortLooper.setReadStringLineProcess([](std::vector<std::string> buffer) {
 // ****** Start ******
 serialPortLooper.start();
 
+// Send message
+sendSring = true;
+
 // ****** Stop ******
 serialPortLooper.stop(); // The stop() is work in sync mode. To stop in async, use stop(true)
 ```
 
-### Process types
+## Flow chart
+![Looper](docs/looper.png)
+
+## Process types
 
 ```cpp
 void SerialProcess(std::unique_ptr<SerialPort> &serialPort);
@@ -98,9 +143,6 @@ void ReadStringProcess(std::string buffer);
 void ReadStringLineProcess(std::vector<std::string> buffer);
 ```
 
-### Flow chart
-![Looper](docs/looper.png)
-
 # Default settings
 * BaudRate = 9600
 * Byte Size = 8
@@ -110,30 +152,4 @@ void ReadStringLineProcess(std::vector<std::string> buffer);
 * End Of Char = 0
 * Timeout = 50ms
 
-# Requirements
 
-Minimum C++ 11
-
-# Installation
-
-### Cmake
-
-1. Create **libs** folder in you project
-2. Clone this repository into the **libs** folder
-   ```
-   git clone https://github.com/kcwongjoe/serial_port.git
-   ```
-3. Add the code in your project *CMakeLists.txt*
-   ```
-   # Serial port library
-   add_subdirectory(./libs/serial_port)
-   target_link_libraries(${PROJECT_NAME}
-       PRIVATE
-           serial_port
-   )
-   ```
-### For dummy
-1. Copy all files inside **src** folder and **include/serial_port** folder to your project.
-
-# license
-This project is licensed under [MIT](LICENSE) license.
