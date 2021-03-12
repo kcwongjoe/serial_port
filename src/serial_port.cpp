@@ -253,13 +253,16 @@ namespace SerialPortUtils
 	 */
 	void SerialPort::close()
 	{
-		// Lock mutex
-		std::lock_guard<std::mutex> lock(m_mutex);
-
-		if (m_connected)
+		if (this)
 		{
-			CloseHandle(m_serialHandle);
-			m_connected = false;
+			// Lock mutex
+			std::lock_guard<std::mutex> lock(m_mutex);
+
+			if (m_connected)
+			{
+				CloseHandle(m_serialHandle);
+				m_connected = false;
+			}
 		}
 	}
 
