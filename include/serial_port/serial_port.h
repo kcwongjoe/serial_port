@@ -13,10 +13,26 @@
 #include <winreg.h>
 #include <tchar.h>
 
+/**
+ * @example eg1_print_ports.cpp
+ * @example eg2_read.cpp
+ * 
+ */
 namespace SerialPortUtils
 {
+    /**
+     * @brief Flow Control: None
+     */
     const int SERIAL_PORT_FCTL_NONE = 0;
+
+    /**
+     * @brief Flow Control: Xon/Xoff
+     */
     const int SERIAL_PORT_FCTL_XON_XOFF = 1;
+
+    /**
+     * @brief Flow Control: Hardware
+     */
     const int SERIAL_PORT_FCTL_HARDWARE = 2;
 
     /**
@@ -117,7 +133,7 @@ namespace SerialPortUtils
     private:
         bool setAllSerialState();
 
-        void SerialPort::SetFlowControlSubFunc(DCB &serialParams, int flowControl);
+        void SetFlowControlSubFunc(DCB &serialParams, int flowControl);
         bool setTimeoutSetting(int timeout);
 
         /**
@@ -160,7 +176,10 @@ namespace SerialPortUtils
 
     private:
 
-#define REGISTRY_MAX_KEY_LENGTH 255 /*The maximum length of the registry key.*/
+/**
+ * @brief The maximum length of the registry key.
+ */
+#define REGISTRY_MAX_KEY_LENGTH 255 
 
         /**
          * @brief Look up values under the key and subkey in registry and process.

@@ -19,14 +19,41 @@ namespace SerialPortUtils
     public:
 
         // Define function type
+
+        /**
+         * @ref setSendBytePreProcess()
+         */
         typedef std::function<std::pair<unsigned char*, int>()> SendBytePreProcess;
+
+        /**
+         * @ref setSendStringPreProcess()
+         */
         typedef std::function<std::string()> SendStringPreProcess;
+
+        /**
+         * @ref setSendPostProcess()
+         */
         typedef std::function<void(int n)> SendPostProcess;
 
+        /**
+         * @ref setReadByteProcess()
+         */
         typedef std::function<void(unsigned char* buffer, int bufferSize)> ReadByteProcess;
+
+        /**
+         * @ref setReadStringProcess()
+         */
         typedef std::function<void(std::string buffer)> ReadStringProcess;
+
+        /**
+         * @ref setReadStringLineProcess()
+         * 
+         */
         typedef std::function<void(std::vector<std::string> buffer)> ReadStringLineProcess;
 
+        /**
+         * @ref setStartProcess(), setStopProcess(), setReadPreProcess()
+         */
         typedef std::function<void(std::unique_ptr<SerialPort> &serialPort)> SerialProcess;
 
         // Constructor and Destructor

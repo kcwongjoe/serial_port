@@ -323,7 +323,7 @@ namespace SerialPortUtils
     /**
      * @brief Read ASCII from serial port
      *
-     * @param[in] strBufferSize Buffer size to be read
+     * @param[in] bufferSize Buffer size to be read
      * @return Return the ASCII string. If connection fail or no bytes collected, return a empty string.
      */
     std::string SerialPortLooper::readASCII(int bufferSize)
@@ -433,7 +433,7 @@ namespace SerialPortUtils
      * {
      *    ......
      *    ......
-     *    serial.setSendBytePreProcess(func);
+     *    serial.setSendStringPreProcess(func);
      * }
      * @endcode
      * 
@@ -448,7 +448,7 @@ namespace SerialPortUtils
      * @brief Set the Send Post-Process fucntion
      * 
      * @details
-     * The SendPostProcess will be process after send bytes or ASCII string.     
+     * The SendPostProcess will be process after send bytes or ASCII string. 
      *  
      * The "int" input variable is the number of bytes to be sent.
      * 
