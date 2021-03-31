@@ -6,7 +6,7 @@
 
 #include <thread>
 #include <vector>
-#include "serial_port.h"
+#include <serial_port.h>
 #include <regex>
 
 namespace SerialPortUtils

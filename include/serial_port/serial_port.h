@@ -12,6 +12,7 @@
 #include <atlbase.h>
 #include <winreg.h>
 #include <tchar.h>
+#include <serial_port_info.h>
 
 /**
  * @example eg1_print_ports.cpp
@@ -34,17 +35,6 @@ namespace SerialPortUtils
      * @brief Flow Control: Hardware
      */
     const int SERIAL_PORT_FCTL_HARDWARE = 2;
-
-    /**
-     * @brief A structure to store the serial port information.
-    */
-    struct SerialPortInfo
-    {
-        int port = -1;                      /* Port. Default as -1.*/
-        LPTSTR queryDosDeviceName = _T(""); /* Device Name use for QueryDosDevice()*/
-        std::string deviceName = "";        /* Device Names */
-        std::string friendlyName = "";      /* Friendly Name */
-    };
 
     /**
      * @brief A class to control the serial port.
@@ -75,6 +65,7 @@ namespace SerialPortUtils
         // Connection
         bool open(int port);
         bool open(std::string port);
+        bool open(SerialPortInfo port);
 
         void close();
 

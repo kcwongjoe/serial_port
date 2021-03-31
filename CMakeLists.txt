@@ -9,6 +9,7 @@ endif()
 
 # Create source files list
 set(SERIALPORT_SOURCES_FILES)
+LIST(APPEND SERIALPORT_SOURCES_FILES "./src/serial_port_info.cpp")
 LIST(APPEND SERIALPORT_SOURCES_FILES "./src/serial_port.cpp")
 LIST(APPEND SERIALPORT_SOURCES_FILES "./src/serial_port_looper.cpp")
 

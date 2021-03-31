@@ -37,7 +37,7 @@ void eg2_read()
 
         // Open the first serial port
         std::cout << "Openning port..." << std::endl;
-        bool success = serialPortLooper->open(comPorts[0].port);
+        bool success = serialPortLooper->open(comPorts[0]);
 
         if (success)
         {
