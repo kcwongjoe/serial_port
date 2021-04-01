@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 #include <atlbase.h>
 
 namespace SerialPortUtils

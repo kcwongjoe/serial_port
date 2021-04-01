@@ -8,7 +8,7 @@ namespace SerialPortUtils
      * @param serialPorts SerialPortInfo List
      * @return Return the Friendly Name list.
      */
-    std::vector<std::string> SerialPortUtils::toFriendlyNameList(std::vector<SerialPortInfo> serialPorts)
+    std::vector<std::string> SerialPortInfo::toFriendlyNameList(std::vector<SerialPortInfo> serialPorts)
     {
         std::vector<std::string> result;
         for (int i = 0; i < serialPorts.size(); i++)
@@ -25,7 +25,7 @@ namespace SerialPortUtils
      * @param serialPorts SerialPortInfo List
      * @return Return the Port list.
      */
-    std::vector<int> SerialPortUtils::toPortList(std::vector<SerialPortInfo> serialPorts)
+    std::vector<int> SerialPortInfo::toPortList(std::vector<SerialPortInfo> serialPorts)
     {
         std::vector<int> result;
         for (int i = 0; i < serialPorts.size(); i++)
