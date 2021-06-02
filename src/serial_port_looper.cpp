@@ -48,7 +48,6 @@ namespace SerialPortUtils
 
     /**
      * @brief Reset the status and buffer
-     *
      */
     void SerialPortLooper::reset()
     {

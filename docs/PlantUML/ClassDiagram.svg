@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="165px" preserveAspectRatio="none" style="width:277px;height:165px;background:#FFFFFF;" version="1.1" viewBox="0 0 277 165" width="277px" zoomAndPan="magnify"><defs><filter height="300%" id="fjh2el5yyppv6" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[bde8a4f8fc3622d89c282a90790561f7]
+class SerialPortInfo--><rect codeLine="4" fill="#FEFECE" filter="url(#fjh2el5yyppv6)" height="32" id="SerialPortInfo" style="stroke:#A80036;stroke-width:1.5;" width="106" x="7" y="7"/><ellipse cx="22" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.3438,29.5 L17.3438,16.6406 L26.8281,16.6406 L26.8281,18.7656 L19.6406,18.7656 L19.6406,21.8125 L26.375,21.8125 L26.375,23.9219 L19.6406,23.9219 L19.6406,27.375 L27.1094,27.375 L27.1094,29.5 L17.3438,29.5 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="74" x="36" y="28.9092">SerialPortInfo</text><!--MD5=[cfbdf762610fcc8e7e660678dff86ad1]
+class SerialPort--><rect codeLine="18" fill="#FEFECE" filter="url(#fjh2el5yyppv6)" height="32" id="SerialPort" style="stroke:#A80036;stroke-width:1.5;" width="86" x="17" y="119"/><ellipse cx="32" cy="135" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M35.5781,136.4688 L37.875,137.0469 Q37.2344,139.4844 35.8281,140.5938 Q34.4375,141.7031 32.4063,141.7031 Q30.3281,141.7031 29.0156,140.8594 Q27.7031,140 27.0156,138.3906 Q26.3438,136.7813 26.3438,134.9844 Q26.3438,133 27.1094,131.5 Q27.8906,130 29.3125,129.2188 Q30.7344,128.4375 32.4375,128.4375 Q34.375,128.4375 35.7031,129.4375 Q37.0469,130.4375 37.6719,132.5781 L35.4219,133.1094 Q34.9375,131.5781 34.2188,131.0469 Q33.5156,130.5 32.4063,130.5 Q31.1094,130.5 30.25,131.1094 Q29.4063,131.7188 29.0469,132.7813 Q28.6875,133.8281 28.6875,134.9688 Q28.6875,136.4688 29.1094,137.5469 Q29.5313,138.6094 30.3906,139.125 Q31.2656,139.6406 32.2813,139.6406 Q33.5,139.6406 34.3438,138.9375 Q35.1875,138.2344 35.5781,136.4688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="54" x="46" y="140.9092">SerialPort</text><!--MD5=[3a0b755b90c1fed60262b706e3f6f34a]
+class SerialPortLooper--><rect codeLine="75" fill="#FEFECE" filter="url(#fjh2el5yyppv6)" height="32" id="SerialPortLooper" style="stroke:#A80036;stroke-width:1.5;" width="125" x="138.5" y="119"/><ellipse cx="153.5" cy="135" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M157.0781,136.4688 L159.375,137.0469 Q158.7344,139.4844 157.3281,140.5938 Q155.9375,141.7031 153.9063,141.7031 Q151.8281,141.7031 150.5156,140.8594 Q149.2031,140 148.5156,138.3906 Q147.8438,136.7813 147.8438,134.9844 Q147.8438,133 148.6094,131.5 Q149.3906,130 150.8125,129.2188 Q152.2344,128.4375 153.9375,128.4375 Q155.875,128.4375 157.2031,129.4375 Q158.5469,130.4375 159.1719,132.5781 L156.9219,133.1094 Q156.4375,131.5781 155.7188,131.0469 Q155.0156,130.5 153.9063,130.5 Q152.6094,130.5 151.75,131.1094 Q150.9063,131.7188 150.5469,132.7813 Q150.1875,133.8281 150.1875,134.9688 Q150.1875,136.4688 150.6094,137.5469 Q151.0313,138.6094 151.8906,139.125 Q152.7656,139.6406 153.7813,139.6406 Q155,139.6406 155.8438,138.9375 Q156.6875,138.2344 157.0781,136.4688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="93" x="167.5" y="140.9092">SerialPortLooper</text><!--MD5=[cd7e1e1a53805551372947e5a776ce0c]
+reverse link SerialPortInfo to SerialPort--><path codeLine="155" d="M60,44.05 C60,44.05 60,118.98 60,118.98 " fill="none" id="SerialPortInfo-backto-SerialPort" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="60,39.05,56,48.05,60,44.05,64,48.05,60,39.05" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="38" x="61" y="85.6597">Return</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="20" x="36.8125" y="62.7766">0..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="7" x="51.7969" y="108.1277">1</text><!--MD5=[775f97b06505e335851afa552a0753f3]
+link SerialPort to SerialPortLooper--><path codeLine="156" d="M103.07,135 C103.07,135 125.47,135 125.47,135 " fill="none" id="SerialPort-to-SerialPortLooper" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="138.47,135,132.47,131,126.47,135,132.47,139,138.47,135" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="7" x="111.0742" y="131.1571">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="7" x="123.4226" y="131.5942">1</text><!--MD5=[26af6f7bf2ac9e428f7f2ae7461192be]
+@startuml {class_diagram_uml.png} "Class Diagram"
+    skinparam linetype polyline
+    skinparam linetype ortho
+
+    entity SerialPortInfo {
+        __Static Function__
+        {static} +toFriendlyNameList()
+        {static} +toPortList()
+        __Public Variable__
+        +port : int
+        +queryDosDeviceName : LPTSTR
+        +deviceName : string
+        +friendlyName : string
+        __Public Methods__
+        +string()
+        +operator<<()
+    }
+
+    class SerialPort {
+        __Global Constant__
+        +SERIAL_PORT_FCTL_NONE
+        +SERIAL_PORT_FCTL_XON_XOFF
+        +SERIAL_PORT_FCTL_HARDWARE
+        __Static Function__
+        {static} +getSerialPortList()
+        __Public Functions__
+        +SerialPort()
+        +~SerialPort()
+        +open()
+        +close()
+        +resetBuffer()
+        ..Getter and Setter..
+        +setBaudRate()
+        +getBaudRate()
+        +setByteSize()
+        +getByteSize()
+        +setStopBits()
+        +getStopBits()
+        +setParity()
+        +getParity()
+        +setFlowControl()
+        +getFlowControl()
+        +setEndOfChar()
+        +getEndOfChar()
+        +setTimeout()
+        +getTimeout()
+        +setRxTxBufferSize()
+        +getRxTxBufferSize()
+        +isOpened()
+        ..Transmission..
+        +sendASCII()
+        +sendBytes()
+        +readASCII()
+        +readBytes()
+        __Private Variables__
+        -m_serialHandle : HANDLE
+        -m_connected : bool
+        -m_mutex: mutex
+        ..Setting..
+        -m_baudRate : DWORD
+        -m_byteSize : BYTE
+        -m_stopBits : BYTE
+        -m_parity : BYTE
+        -m_flowControl : int
+        -m_endOfChar : char
+        -m_timeout : int
+        -m_rxtxBufferSize : int
+        __Private Function__
+        -setAllSerialState()
+        -setTimeoutSetting()
+        ..template..
+        -setSerialStateDecorator()
+        -processRegistryValue()
+    }
+
+    class SerialPortLooper {
+        __typedef__
+        +SendBytePreProcess
+        +SendStringPreProcess
+        +SendPostProcess
+        +ReadByteProcess
+        +ReadStringProcess
+        +ReadStringLineProcess
+        +SerialProcess
+        __Public Functions__
+        +SerialPortLooper()
+        +~SerialPortLooper()
+        ..Set Loop Componants..
+        +setStartProcess()
+        +setSendBytePreProcess()
+        +setSendStringPreProcess()
+        +setSendPostProcess()
+        +clearBufferAfterSent()
+        +setReadPreProcess()
+        +setReadByteProcess()
+        +setReadStringProcess()
+        +setReadStringLineProcess()
+        +setStopProcess()
+        ..Tread Control..
+        +start()
+        +stop()
+        ..Connection..
+        +open()
+        +close()
+        ..Transmission..
+        +sendASCII()
+        +sendBytes()
+        +readASCII()
+        +readBytes()
+        ..Getter and Setter..
+        +setEndOfChar()
+        +getEndOfChar()
+        +setBufferSize()
+        +getBuffereSize()
+        +setDelayTimeAfterSend()
+        +getDelayTimeAfterSend()
+        +setIterationDelayTime()
+        +getIterationDelayTime()
+        +setWaitForStopTimeout()
+        +getWaitForStopTimeout()
+        +getSerialPort()
+        +isRunning()
+        +isOpened()
+        __Private Variables__
+        ..Status..
+        -m_stopThread : bool
+        -m_stoppedThread : bool
+        -m_isRunning : bool
+        ..Setting..
+        -m_thread : thread
+        -m_serialPort : unique_ptr<SerialPort>
+        -m_buffer : unique_ptr<unsigned char[]>
+        -m_bufferSize : int
+        -m_stringLineBuffer : string
+        -m_endOfChar : char
+        -m_DelayTimeAfterSend : int
+        -m_iterationDelayTime : int
+        -m_waitForStopTimeout : int
+        ..Loop Components..
+        -m_startProcess : SerialProcess
+        -m_clearSendByteBuffer : bool
+        -m_sendBytePreProcess : SendBytePreProcess
+        -m_sendStringPreProcess : SendStringPreProcess
+        -m_sendPostProcess : SendPostProcess
+        -m_readPreProcess : SerialProcess
+        -m_readByteProcess : ReadByteProcess
+        -m_readStringProcess : ReadStringProcess
+        -m_readStringLineProcess : ReadStringLineProcess
+        -m_stopProcess : SerialProcess
+        __Private Functions__
+        -run()
+        -reset()
+        -splitStr()
+    }
+
+    SerialPortInfo "0..*" <.. "1" SerialPort : Return
+    SerialPort "1" -r-* "1" SerialPortLooper
+
+    hide members
+@enduml
+
+PlantUML version 1.2021.7(Sun May 23 20:40:07 HKT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: MS950
+Language: en
+Country: US
+--></g></svg>

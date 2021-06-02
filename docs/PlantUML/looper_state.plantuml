@@ -1,0 +1,95 @@
+@startuml {looper_state.svg} "LooperStateChart"
+    !theme sketchy
+    skinparam linetype polyline
+    skinparam linetype ortho
+    (*) -d-> "Main Loop"
+    note left
+    Call stop() to set the m_stopThread to true
+    end note
+    if m_stopThread then
+    -l-> [true] "Stop Process"
+    -d-> (*)
+    else
+    -d-> [false] "Start Process"
+    note right
+        **setStartProcess()**
+        //void StartProcess()//
+        A pre-process to do something before send and read
+    end note
+    partition "Send Processes" {
+        -d-> "Send Byte Process"
+        partition "Send Byte Processs Detail" {
+            "Send Byte Process" -[hidden]-> "Send Byte Pre-Process"
+            note right
+                **setSendBytePreProcess()**
+                //std::pair<unsigned char*, int> SendBytePreProcess()//
+                Prepare your byte to be sent. Return (Bytes, lenght of bytes)
+            end note
+            -d-> "Send to serial" #b7285c
+            -d-> "Send Post-Process"
+            note right
+                **setSendPostProcess()**
+                //void SendPostProcess(int n)//
+                A post-process after sent.
+            end note
+            -d-> "Clear buffer if necessary"
+            note right
+                Enable this function by setting clearBUfferAfterSent() as true
+                if unsigned char* should be released after sent.
+            end note
+        }
+        "Send Byte Process" -d-> "Send String Process"
+        partition "Send String Processs Detail" {
+            "Send String Process" -[hidden]-> "Send String Pre-Process"
+            note right
+                **setSendStringPreProcess()**
+                //std::string SendStringPreProcess()//
+                Prepare your string to be sent.
+            end note
+            -d-> "Send String to serial" #b7285c
+            -d-> "Send String Post-Process"
+            note right
+                **setSendPostProcess()**
+                //void SendPostProcess(int n)//
+                A post-process after sent.
+            end note
+        }
+    }
+    "Send String Process" -d-> "Delay After send" #b7285c
+    note right
+        **setDelayTimeAfterSend(int)**
+        A delay after sent
+    end note
+    -d-> "Read Pre-Process"
+    note right
+        **setReadPreProcess()**
+        //void ReadPreProcess()//
+        A pre-process before reading bytes
+    end note
+    partition "Read Processes" {
+    -d-> "Read Bytes" #b7285c
+    -d-> "Read Byte Process"
+    note right
+        **setReadByteProcess()**
+        //void ReadByteProcess(unsigned char* buffer, int bufferSize)//
+        User can process the received bytes in here.
+    end note
+    -d-> "Read String Process"
+    note right
+        **setReadStringProcess()**
+        //void ReadStringProcess(std::string buffer)//
+        Received bytes will be converted to string in here.
+        User can handle the received bytes in the string format here.
+    end note
+    -d-> "Read String Line Process"
+    note right
+        **setReadStringLineProcess()**
+        //void ReadStringLineProcess(std::vector<std::string> buffer)//
+        Received string will be split by delimiter.
+        User can set the delimieter by **setEndOfChar()**
+    end note
+    }
+    -d-> "Delay between iteration" #b7285c
+    -u-> "Main Loop"
+    endif
+@enduml

@@ -298,7 +298,7 @@ namespace SerialPortUtils
                 if (m_endOfChar != 0) serialParams.EofChar = m_endOfChar;
 
                 // Set flow control
-                this->SetFlowControlSubFunc(serialParams, m_flowControl);
+                this->setFlowControlSubFunc(serialParams, m_flowControl);
             },
             false   // do not reset buffer
                 );
@@ -310,7 +310,7 @@ namespace SerialPortUtils
      * @param[in] thisObj this
      * @param[in, out] serialParams
      */
-    void SerialPort::SetFlowControlSubFunc(DCB& serialParams, int flowControl)
+    void SerialPort::setFlowControlSubFunc(DCB& serialParams, int flowControl)
     {
         // Set Flow control
         if (flowControl == SERIAL_PORT_FCTL_NONE)
@@ -646,7 +646,7 @@ namespace SerialPortUtils
             // Set
             result = setSerialStateDecorator([this, flowControl](DCB& serialParams)
                 {
-                    SetFlowControlSubFunc(serialParams, flowControl);
+                    setFlowControlSubFunc(serialParams, flowControl);
                 }
             );
 

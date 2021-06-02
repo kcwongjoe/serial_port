@@ -17,7 +17,6 @@
 /**
  * @example eg1_print_ports.cpp
  * @example eg2_read.cpp
- * 
  */
 namespace SerialPortUtils
 {
@@ -124,7 +123,7 @@ namespace SerialPortUtils
     private:
         bool setAllSerialState();
 
-        void SetFlowControlSubFunc(DCB &serialParams, int flowControl);
+        void setFlowControlSubFunc(DCB &serialParams, int flowControl);
         bool setTimeoutSetting(int timeout);
 
         /**

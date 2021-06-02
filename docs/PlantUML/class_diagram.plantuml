@@ -1,0 +1,160 @@
+@startuml {class_diagram_uml.svg} "ClassDiagram"
+    skinparam linetype polyline
+    skinparam linetype ortho
+
+    entity SerialPortInfo {
+        __Static Function__
+        {static} +toFriendlyNameList()
+        {static} +toPortList()
+        __Public Variable__
+        +port : int
+        +queryDosDeviceName : LPTSTR
+        +deviceName : string
+        +friendlyName : string
+        __Public Methods__
+        +string()
+        +operator<<()
+    }
+
+    class SerialPort {
+        __Global Constant__
+        +SERIAL_PORT_FCTL_NONE
+        +SERIAL_PORT_FCTL_XON_XOFF
+        +SERIAL_PORT_FCTL_HARDWARE
+        __Static Function__
+        {static} +getSerialPortList()
+        __Public Functions__
+        +SerialPort()
+        +~SerialPort()
+        +open()
+        +close()
+        +resetBuffer()
+        ..Getter and Setter..
+        +setBaudRate()
+        +getBaudRate()
+        +setByteSize()
+        +getByteSize()
+        +setStopBits()
+        +getStopBits()
+        +setParity()
+        +getParity()
+        +setFlowControl()
+        +getFlowControl()
+        +setEndOfChar()
+        +getEndOfChar()
+        +setTimeout()
+        +getTimeout()
+        +setRxTxBufferSize()
+        +getRxTxBufferSize()
+        +isOpened()
+        ..Transmission..
+        +sendASCII()
+        +sendBytes()
+        +readASCII()
+        +readBytes()
+        __Private Variables__
+        -m_serialHandle : HANDLE
+        -m_connected : bool
+        -m_mutex: mutex
+        ..Setting..
+        -m_baudRate : DWORD
+        -m_byteSize : BYTE
+        -m_stopBits : BYTE
+        -m_parity : BYTE
+        -m_flowControl : int
+        -m_endOfChar : char
+        -m_timeout : int
+        -m_rxtxBufferSize : int
+        __Private Function__
+        -setAllSerialState()
+        -setTimeoutSetting()
+        ..template..
+        -setSerialStateDecorator()
+        -processRegistryValue()
+    }
+
+    class SerialPortLooper {
+        __typedef__
+        +SendBytePreProcess
+        +SendStringPreProcess
+        +SendPostProcess
+        +ReadByteProcess
+        +ReadStringProcess
+        +ReadStringLineProcess
+        +SerialProcess
+        __Public Functions__
+        +SerialPortLooper()
+        +~SerialPortLooper()
+        ..Set Loop Componants..
+        +setStartProcess()
+        +setSendBytePreProcess()
+        +setSendStringPreProcess()
+        +setSendPostProcess()
+        +clearBufferAfterSent()
+        +setReadPreProcess()
+        +setReadByteProcess()
+        +setReadStringProcess()
+        +setReadStringLineProcess()
+        +setStopProcess()
+        ..Tread Control..
+        +start()
+        +stop()
+        ..Connection..
+        +open()
+        +close()
+        ..Transmission..
+        +sendASCII()
+        +sendBytes()
+        +readASCII()
+        +readBytes()
+        ..Getter and Setter..
+        +setEndOfChar()
+        +getEndOfChar()
+        +setBufferSize()
+        +getBuffereSize()
+        +setDelayTimeAfterSend()
+        +getDelayTimeAfterSend()
+        +setIterationDelayTime()
+        +getIterationDelayTime()
+        +setWaitForStopTimeout()
+        +getWaitForStopTimeout()
+        +getSerialPort()
+        +isRunning()
+        +isOpened()
+        __Private Variables__
+        ..Status..
+        -m_stopThread : bool
+        -m_stoppedThread : bool
+        -m_isRunning : bool
+        ..Setting..
+        -m_thread : thread
+        -m_serialPort : unique_ptr<SerialPort>
+        -m_buffer : unique_ptr<unsigned char[]>
+        -m_bufferSize : int
+        -m_stringLineBuffer : string
+        -m_endOfChar : char
+        -m_DelayTimeAfterSend : int
+        -m_iterationDelayTime : int
+        -m_waitForStopTimeout : int
+        ..Loop Components..
+        -m_startProcess : SerialProcess
+        -m_clearSendByteBuffer : bool
+        -m_sendBytePreProcess : SendBytePreProcess
+        -m_sendStringPreProcess : SendStringPreProcess
+        -m_sendPostProcess : SendPostProcess
+        -m_readPreProcess : SerialProcess
+        -m_readByteProcess : ReadByteProcess
+        -m_readStringProcess : ReadStringProcess
+        -m_readStringLineProcess : ReadStringLineProcess
+        -m_stopProcess : SerialProcess
+        __Private Functions__
+        -run()
+        -reset()
+        -splitStr()
+    }
+
+    SerialPortInfo "0..*" <.. "1" SerialPort : Return
+    SerialPort "1" -r-* "1" SerialPortLooper
+
+    hide members
+@enduml
