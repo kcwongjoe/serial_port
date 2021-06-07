@@ -49,7 +49,7 @@ std::string receivedASCII = serialPort.readASCII();
 serialPort.close();
 ```
  
-*For more details, please refer to the [Documentation](http://kcwongjoe.lovestoblog.com/serial_port/index.html) and [Diagram](Diagram.md)*
+*For more details, please refer to the [Documentation](https://www.kcwongjoe.com/serial_port/index.html) and [Diagram](Diagram.md)*
 
 
 # Installation
