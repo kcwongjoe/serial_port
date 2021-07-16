@@ -13,6 +13,7 @@ A window based serial port library in c++.
 # Table of content
 
 - [Example](#Example)
+- [Requirements](#Requirements)
 - [Installation](#Installation)
     - [CMake](#CMake)
     - [For Dummy](#For-Dummy)  
@@ -21,6 +22,7 @@ A window based serial port library in c++.
     - [Process types](#Process-types)
     - [Flow chart](#Flow-chart)  
 - [Default settings](#Default-settings)
+- [Deploy example codes](#Deploy-example-codes)
 
 
 # Example
