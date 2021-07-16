@@ -51,6 +51,8 @@ serialPort.close();
  
 *For more details, please refer to the [Documentation](https://www.kcwongjoe.com/serial_port/index.html) and [Diagram](Diagram.md)*
 
+# Requirements
+Minimum C++ 14
 
 # Installation
 
@@ -59,7 +61,7 @@ serialPort.close();
 1. Create **libs** folder in you project
 2. Clone this repository into the **libs** folder
    ```
-   git clone https://github.com/kcwongjoe/serial_port.git
+   git clone --recurse-submodules https://github.com/kcwongjoe/serial_port.git
    ```
 3. Add the code in your project *CMakeLists.txt*
    ```
@@ -152,4 +154,16 @@ void ReadStringLineProcess(std::vector<std::string> buffer);
 * End Of Char = 0
 * Timeout = 50ms
 
+# Deploy example codes
+
+1. Clone this repository
+   ```
+   git clone --recurse-submodules https://github.com/kcwongjoe/serial_port.git
+   ```
+
+2. Run **build.bat** in Solution folder
+
+   Type `build x86` or `build x64`
+
+3. Go to *build* folder and open visual studio solution. Set serial_port_examples project as Startup project.
 

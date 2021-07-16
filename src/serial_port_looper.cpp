@@ -274,6 +274,17 @@ namespace SerialPortUtils
 
     /**
      * @brief Open Serial Port
+     * 
+     * @param[in] port The Port to be openned.
+     * @return Return true if connection success, otherwise return false
+     */
+    bool SerialPortLooper::open(SerialPortInfo port)
+    {
+        return m_serialPort->open(port);
+    }
+
+    /**
+     * @brief Open Serial Port
      *
      * @param[in] port The Port to be openned. If you want to open COM3, port = 3
      * @return Return true if connection success, otherwise return false

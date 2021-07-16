@@ -60,6 +60,9 @@
         "filesystem": "cpp",
         "fstream": "cpp",
         "iomanip": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "bit": "cpp",
+        "clocale": "cpp",
+        "stop_token": "cpp"
     }
 }

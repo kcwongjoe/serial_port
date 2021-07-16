@@ -15,7 +15,9 @@ void eg2_read()
     // Print result
     if (comPorts.size() > 0)
     {
-        std::cout << std::to_string(comPorts.size()) + " serial port found. \"" + comPorts[0].friendlyName + "\" will be openned." << std::endl;
+        std::string comName = comPorts[0].friendlyName;
+
+        std::cout << std::to_string(comPorts.size()) + " serial port found. \"" + comName + "\" will be openned." << std::endl;
         std::cout << "Initialing looper..." << std::endl;
 
         // Create looper with a smart pointer. 
@@ -28,11 +30,17 @@ void eg2_read()
         // Set the delimiter of the data stream
         serialPortLooper->setEndOfChar('\n');
 
-        // Add processes
+        // Add read processes
         serialPortLooper->setReadStringLineProcess([](std::vector<std::string> buffer) {
             for (int i=0;i< buffer.size();i++){
                 std::cout << buffer[i] << std::endl;
             }            
+        });
+
+        // Add stop process
+        serialPortLooper->setStopProcess([comName](std::unique_ptr<SerialPort> &serialPort) {
+            serialPort->close();
+            std::cout << "\"" + comName + "\" was closed." << std::endl;
         });
 
         // Open the first serial port
@@ -41,20 +49,21 @@ void eg2_read()
 
         if (success)
         {
-            std::cout << "Success to open the \"" + comPorts[0].friendlyName + "\". Start looper." << std::endl;
+            std::cout << "Success to open the \"" + comName + "\". Start looper." << std::endl;
 
             // Start
             serialPortLooper->start();
 
-            // Loop the main thread forever
-            while(true)
-            {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            }
+            // Main thread will be stop after 10 second.
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+
+            // Stop
+            std::cout << "Start to disconnect the \"" + comName + "\" after 10 seconds." << std::endl;
+            serialPortLooper->stop();
         }
         else
         {
-            std::cout << "Fail to open the \"" + comPorts[0].friendlyName + "\"." << std::endl;
+            std::cout << "Fail to open the \"" + comName + "\"." << std::endl;
         }
 
     } 

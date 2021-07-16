@@ -179,6 +179,7 @@ namespace SerialPortUtils
         bool stop(bool async = false);
 
         // Connection
+        bool open(SerialPortInfo port);
         bool open(int port);
         void close();
 

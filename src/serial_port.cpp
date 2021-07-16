@@ -179,7 +179,7 @@ namespace SerialPortUtils
     /**
      * @brief Open Serial Port
      * 
-     * @param port The Port to be openned.
+     * @param[in] port The Port to be openned.
      * @return Return true if connection success, otherwise return false
      */
     bool SerialPort::open(SerialPortInfo port)
