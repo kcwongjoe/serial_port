@@ -194,7 +194,7 @@ namespace SerialPortUtils
      */
     bool SerialPort::open(std::string port)
     {
-        if (!m_connected) {
+        if (m_connected) {
             throw std::runtime_error("opening an open serial port");
         }
         // Connect
