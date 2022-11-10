@@ -144,7 +144,6 @@ namespace SerialPortUtils
         m_stopBits = ONESTOPBIT;
         m_parity = NOPARITY;
         m_flowControl = SERIAL_PORT_FCTL_NONE;
-        m_endOfChar = 0;
         m_timeout = 50;
     }
 
@@ -195,7 +194,6 @@ namespace SerialPortUtils
      */
     bool SerialPort::open(std::string port)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (!m_connected) {
             throw std::runtime_error("opening an open serial port");
         }
@@ -241,9 +239,6 @@ namespace SerialPortUtils
      */
     void SerialPort::close()
     {
-        // Lock mutex
-        std::lock_guard<std::mutex> lock(m_mutex);
-
         if (m_connected) {
             CloseHandle(m_serialHandle);
             m_connected = false;
@@ -267,8 +262,6 @@ namespace SerialPortUtils
                 serialParams.ByteSize = m_byteSize;
                 serialParams.StopBits = m_stopBits;
                 serialParams.Parity = m_parity;
-                if (m_endOfChar != 0)
-                    serialParams.EofChar = m_endOfChar;
 
                 // Set flow control
                 this->setFlowControlSubFunc(serialParams, m_flowControl);
@@ -321,7 +314,6 @@ namespace SerialPortUtils
      */
     void SerialPort::resetBuffer()
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR);
         }
@@ -345,7 +337,6 @@ namespace SerialPortUtils
             && baudRate != CBR_256000) {
             throw std::invalid_argument("baudRate(" + std::to_string(baudRate) + ") is invalid.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (setSerialStateDecorator([baudRate](DCB& serialParams) { serialParams.BaudRate = baudRate; })) {
                 m_baudRate = baudRate;
@@ -380,7 +371,6 @@ namespace SerialPortUtils
         if (byteSize < 4 || byteSize > 8) {
             throw std::invalid_argument("byteSize(" + std::to_string(byteSize) + ") must be 4 - 8.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (setSerialStateDecorator([byteSize](DCB& serialParams) { serialParams.ByteSize = byteSize; })) {
                 m_byteSize = byteSize;
@@ -416,7 +406,6 @@ namespace SerialPortUtils
         if (stopBits != ONESTOPBIT && stopBits != ONE5STOPBITS && stopBits != TWOSTOPBITS) {
             throw std::invalid_argument("stopBits(" + std::to_string(stopBits) + ") must be 1, 1.5 or 2.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (setSerialStateDecorator([stopBits](DCB& serialParams) { serialParams.StopBits = stopBits; })) {
                 m_stopBits = stopBits;
@@ -454,7 +443,6 @@ namespace SerialPortUtils
             throw std::invalid_argument("stopBits(" + std::to_string(parity)
                                         + ") must be NOPARITY, EVENPARITY, MARKPARITY or SPACEPARITY.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (setSerialStateDecorator([parity](DCB& serialParams) { serialParams.Parity = parity; })) {
                 m_parity = parity;
@@ -493,7 +481,6 @@ namespace SerialPortUtils
                 "flowControl(" + std::to_string(flowControl)
                 + ") must be SERIAL_PORT_FCTL_NONE, SERIAL_PORT_FCTL_XON_XOFF or SERIAL_PORT_FCTL_HARDWARE.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
 
         if (m_connected) {
             if (setSerialStateDecorator(
@@ -521,38 +508,6 @@ namespace SerialPortUtils
     }
 
     /**
-     * @brief Set end of char
-     *
-     * @param endOfChar
-     * @return Return true if success
-     */
-    bool SerialPort::setEndOfChar(char endOfChar)
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        if (m_connected) {
-            if (setSerialStateDecorator([endOfChar](DCB& serialParams) { serialParams.EofChar = endOfChar; })) {
-                m_endOfChar = endOfChar;
-                return true;
-            }
-            return false;
-        }
-        else {
-            m_endOfChar = endOfChar;
-            return true;
-        }
-    }
-
-    /**
-     * @brief Get end of char
-     *
-     * @return char
-     */
-    char SerialPort::getEndOfChar()
-    {
-        return m_endOfChar;
-    }
-
-    /**
      * @brief Set timeout in millisecond
      *
      * @param timeout timeout in millisecond
@@ -563,7 +518,6 @@ namespace SerialPortUtils
         if (timeout < 0 || timeout > MAXDWORD) {
             throw std::invalid_argument("timeout(" + std::to_string(timeout) + ") must be >=0 and < MAXDWORD.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (setTimeoutSetting(timeout)) {
                 m_timeout = timeout;
@@ -599,7 +553,6 @@ namespace SerialPortUtils
         if (bufferSize <= 0 || bufferSize > MAXDWORD) {
             throw std::invalid_argument("bufferSize(" + std::to_string(bufferSize) + ") must be >0 and < MAXDWORD.");
         }
-        std::lock_guard<std::mutex> lock(m_mutex);
         if (m_connected) {
             if (SetupComm(m_serialHandle, bufferSize, bufferSize)) {
                 m_rxtxBufferSize = bufferSize;
@@ -659,8 +612,6 @@ namespace SerialPortUtils
      */
     std::size_t SerialPort::sendBytes(std::byte const* buffer, std::size_t bufferSize)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-
         if (!m_connected) {
             throw std::runtime_error("write to closed serial port");
         }
@@ -705,8 +656,6 @@ namespace SerialPortUtils
      */
     std::size_t SerialPort::readBytes(std::byte* buffer, std::size_t bufferSize)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-
         if (!m_connected) {
             throw std::runtime_error("write to closed serial port");
         }
