@@ -4,15 +4,15 @@
 
 //************Content************
 
-#include <windows.h>
-#include <string>
-#include <mutex>
-#include <functional>
-#include <vector>
+#include "serial_port/serial_port_info.h"
 #include <atlbase.h>
-#include <winreg.h>
+#include <functional>
+#include <mutex>
+#include <string>
 #include <tchar.h>
-#include <serial_port_info.h>
+#include <vector>
+#include <windows.h>
+#include <winreg.h>
 
 /**
  * @example eg1_print_ports.cpp
@@ -37,9 +37,9 @@ namespace SerialPortUtils
 
     /**
      * @brief A class to control the serial port.
-     * 
+     *
      * @details
-     * Default setting: 
+     * Default setting:
      * BaudRate = 9600
      * Byte Size = 8
      * Stop Bits = 1
@@ -47,7 +47,7 @@ namespace SerialPortUtils
      * Flow Control = None
      * End Of Char = 0
      * Timeout = 50ms
-     * 
+     *
      */
     class SerialPort
     {
@@ -55,7 +55,6 @@ namespace SerialPortUtils
         static std::vector<SerialPortInfo> getSerialPortList();
 
     public:
-
         // Constructor and Destructor
         SerialPort();
 
@@ -99,16 +98,15 @@ namespace SerialPortUtils
 
         // Transmission
         bool sendASCII(std::string ascii);
-        int sendBytes(unsigned char* buffer, int bufferSize);
+        std::size_t sendBytes(std::byte const* buffer, std::size_t bufferSize);
 
         std::string readASCII();
-        std::string readASCII(int bufferSize);
-        int readBytes(unsigned char* buffer, int bufferSize);
+        std::string readASCII(std::size_t bufferSize);
+        std::size_t readBytes(std::byte* buffer, std::size_t bufferSize);
 
     private:
-        HANDLE m_serialHandle = NULL;
+        HANDLE m_serialHandle = nullptr;
         bool m_connected = false;
-        std::mutex m_mutex;
 
         // Setting
         DWORD m_baudRate;
@@ -116,26 +114,26 @@ namespace SerialPortUtils
         BYTE m_stopBits;
         BYTE m_parity;
         int m_flowControl;
-        char m_endOfChar;
         int m_timeout;
         int m_rxtxBufferSize = 1024;
-    
+
     private:
         bool setAllSerialState();
 
-        void setFlowControlSubFunc(DCB &serialParams, int flowControl);
+        void setFlowControlSubFunc(DCB& serialParams, int flowControl);
         bool setTimeoutSetting(int timeout);
 
         /**
          * @brief A decorator to set serial setting
          *
          * @tparam SetSerialParaFunc void(DCB &serialParams)
-         * 
+         *
          * @param setFunc Lambda function to set parameter.
          * @param[in] resetBuffer Set it as true to reset rxtx buffer after set state. Default as true.
          * @return bool Return true if success.
          */
-        template <typename SetSerialParaFunc> bool setSerialStateDecorator(SetSerialParaFunc setFunc, bool resetBuffer = true)
+        template<typename SetSerialParaFunc>
+        bool setSerialStateDecorator(SetSerialParaFunc setFunc, bool resetBuffer = true)
         {
             bool result = false;
 
@@ -144,12 +142,11 @@ namespace SerialPortUtils
             SecureZeroMemory(&serialParams, sizeof(DCB));
             serialParams.DCBlength = sizeof(DCB);
 
-            // Get Parameters 
+            // Get Parameters
             result = GetCommState(m_serialHandle, &serialParams);
 
             // Set Parameters
-            if (result)
-            {
+            if (result) {
                 // Set function
                 setFunc(serialParams);
 
@@ -165,40 +162,42 @@ namespace SerialPortUtils
         }
 
     private:
-
 /**
  * @brief The maximum length of the registry key.
  */
-#define REGISTRY_MAX_KEY_LENGTH 255 
+#define REGISTRY_MAX_KEY_LENGTH 255
 
         /**
          * @brief Look up values under the key and subkey in registry and process.
-         * 
+         *
          * @code{.cpp}
          * // Print all hardware FriendlyName values
          * int numOfValues = Utils::processRegistryValue(HKEY_LOCAL_MACHINE,
          *            "SYSTEM\\CurrentControlSet\\Enum",
-        *            [](std::string valueName, DWORD dataType, unsigned char* data, int dataLen)
-        *            {
-        *                if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ)
-        *                {
-        *                    // Found and convert to string, add to result
-        *                    std::string dataString(reinterpret_cast<char*>(data), dataLen);
-        *                    std::cout << dataString;
-        *                }
-        *            }
-        * );
-        * @endcode
-        * 
-        * @tparam ValueProcess void(std::string valueName, DWORD dataType, unsigned char[] data,DWORD sizeOfData)
-        * 
-        * @param rootKey The root key. @c HKEY_CLASSES_ROOT, @c HKEY_CURRENT_USER, @c HKEY_LOCAL_MACHINE, @c HKEY_USERS, @c HKEY_CURRENT_CONFIG, @c HKEY_CURRENT_USER_LOCAL_SETTINGS, @c HKEY_PERFORMANCE_DATA, @c HKEY_PERFORMANCE_NLSTEXT or @c HKEY_PERFORMANCE_TEXT.
-        * @param searchKey The key to be search. e.g. @c "HARDWARE\\DEVICEMAP\\SERIALCOMM"
-        * @param func The function to be processed on value.
-        * @param searchSubKey [Option] Default as true. If true,all of subkey under the key will also be processed. Set it as false if you only want to process the current key.
-        * @return int Return the number of value to be processed.
-        */
-        template <typename ValueProcess> 
+         *            [](std::string valueName, DWORD dataType, unsigned char* data, int dataLen)
+         *            {
+         *                if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ)
+         *                {
+         *                    // Found and convert to string, add to result
+         *                    std::string dataString(reinterpret_cast<char*>(data), dataLen);
+         *                    std::cout << dataString;
+         *                }
+         *            }
+         * );
+         * @endcode
+         *
+         * @tparam ValueProcess void(std::string valueName, DWORD dataType, unsigned char[] data,DWORD sizeOfData)
+         *
+         * @param rootKey The root key. @c HKEY_CLASSES_ROOT, @c HKEY_CURRENT_USER, @c HKEY_LOCAL_MACHINE, @c HKEY_USERS, @c
+         * HKEY_CURRENT_CONFIG, @c HKEY_CURRENT_USER_LOCAL_SETTINGS, @c HKEY_PERFORMANCE_DATA, @c HKEY_PERFORMANCE_NLSTEXT or @c
+         * HKEY_PERFORMANCE_TEXT.
+         * @param searchKey The key to be search. e.g. @c "HARDWARE\\DEVICEMAP\\SERIALCOMM"
+         * @param func The function to be processed on value.
+         * @param searchSubKey [Option] Default as true. If true,all of subkey under the key will also be processed. Set it as
+         * false if you only want to process the current key.
+         * @return int Return the number of value to be processed.
+         */
+        template<typename ValueProcess>
         static int processRegistryValue(HKEY rootKey, std::string searchKey, ValueProcess func, bool searchSubKey = true)
         {
             // Initilaize values
@@ -206,43 +205,56 @@ namespace SerialPortUtils
 
             // Create registry key
             HKEY hKey;
-            if (RegOpenKeyEx(rootKey, searchKey.c_str(), 0, KEY_READ, &hKey) == ERROR_SUCCESS)
-            {
+            if (RegOpenKeyEx(rootKey, searchKey.c_str(), 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
                 // Get information of subkey
                 DWORD numOfSubKey = 0;
                 DWORD maxSubKeySize;
                 DWORD numOfValue;
                 DWORD maxValueNameSize = 0;
                 DWORD maxValueSize = 0;
-                DWORD retCode = RegQueryInfoKey(hKey, nullptr, nullptr, nullptr, &numOfSubKey, &maxSubKeySize, nullptr, &numOfValue, &maxValueNameSize, &maxValueSize, nullptr,    nullptr);
+                DWORD retCode = RegQueryInfoKey(hKey,
+                                                nullptr,
+                                                nullptr,
+                                                nullptr,
+                                                &numOfSubKey,
+                                                &maxSubKeySize,
+                                                nullptr,
+                                                &numOfValue,
+                                                &maxValueNameSize,
+                                                &maxValueSize,
+                                                nullptr,
+                                                nullptr);
 
                 // Get value in current key
-                if (numOfValue > 0)
-                {
+                if (numOfValue > 0) {
                     // Look up all value
 #pragma warning(suppress : 26451)
                     std::unique_ptr<char[]> valueNameBuffer(new char[maxValueNameSize + 1]);
                     std::unique_ptr<unsigned char[]> dataByteBuffer(new unsigned char[maxValueSize]);
-                    for (int i = 0; i < (int)numOfValue; i++)
-                    {
-                        //TCHAR valueName[REGISTRY_MAX_VALUE_NAME_LENGTH];
+                    for (int i = 0; i < (int)numOfValue; i++) {
+                        // TCHAR valueName[REGISTRY_MAX_VALUE_NAME_LENGTH];
                         DWORD dataType;
                         DWORD valueNameBufferLen = maxValueNameSize + 1;
                         DWORD sizeOfDataByteBuffer = maxValueSize;
 
                         // Get the subkey
-                        if (RegEnumValue(hKey, i, valueNameBuffer.get(), &valueNameBufferLen, NULL, &dataType, dataByteBuffer.get(), &sizeOfDataByteBuffer) == ERROR_SUCCESS)
-                        {
+                        if (RegEnumValue(hKey,
+                                         i,
+                                         valueNameBuffer.get(),
+                                         &valueNameBufferLen,
+                                         NULL,
+                                         &dataType,
+                                         dataByteBuffer.get(),
+                                         &sizeOfDataByteBuffer)
+                            == ERROR_SUCCESS) {
                             // Convert value name to string
                             std::string valueName = std::string(valueNameBuffer.get(), (int)valueNameBufferLen);
 
                             // Process
-                            try
-                            {
+                            try {
                                 func(valueName, dataType, dataByteBuffer.get(), sizeOfDataByteBuffer);
                             }
-                            catch (...)
-                            {
+                            catch (...) {
                                 // Release buffer
                                 valueNameBuffer.release();
                                 dataByteBuffer.release();
@@ -255,40 +267,34 @@ namespace SerialPortUtils
                             }
 
                             // Update counter
-                            result++;                
+                            result++;
                         }
                     }
                 }
 
                 // Search value in subkey
-                if (searchSubKey && numOfSubKey > 0)
-                {
+                if (searchSubKey && numOfSubKey > 0) {
                     // Look up all subkey
-                    for (int i = 0; i < (int)numOfSubKey; i++)
-                    {
+                    for (int i = 0; i < (int)numOfSubKey; i++) {
                         TCHAR subKey[REGISTRY_MAX_KEY_LENGTH];
                         DWORD subKeyBufferLen = sizeof(subKey);
 
                         // Get the subkey
-                        if (RegEnumKeyEx(hKey, i, subKey, &subKeyBufferLen, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
-                        {
+                        if (RegEnumKeyEx(hKey, i, subKey, &subKeyBufferLen, NULL, NULL, NULL, NULL) == ERROR_SUCCESS) {
                             // Search under the subkey
-                            try
-                            {
+                            try {
                                 result += processRegistryValue(rootKey, searchKey + "\\" + subKey, func, searchSubKey);
                             }
-                            catch (...)
-                            {
+                            catch (...) {
                                 // Close
                                 RegCloseKey(hKey);
 
-                                //Rethrow
+                                // Rethrow
                                 throw;
                             }
-                            
                         }
                     }
-                }            
+                }
             }
 
             // Close
@@ -296,11 +302,9 @@ namespace SerialPortUtils
 
             return result;
         }
-
     };
 
-
-}
+} // namespace SerialPortUtils
 
 //*******************************
 

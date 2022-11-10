@@ -4,10 +4,10 @@
 
 //************Content************
 
-#include <vector>
-#include <string>
-#include <iostream>
 #include <atlbase.h>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace SerialPortUtils
 {
@@ -16,49 +16,49 @@ namespace SerialPortUtils
      */
     class SerialPortInfo
     {
-        public:
-            static std::vector<std::string> toFriendlyNameList(std::vector<SerialPortInfo> serialPorts);
-            static std::vector<int> toPortList(std::vector<SerialPortInfo> serialPorts);
+    public:
+        static std::vector<std::string> toFriendlyNameList(std::vector<SerialPortInfo> serialPorts);
+        static std::vector<int> toPortList(std::vector<SerialPortInfo> serialPorts);
 
-        public:
-            /**
-             * @brief Port. Default as -1.
-             */
-            int port = -1;
+    public:
+        /**
+         * @brief Port. Default as -1.
+         */
+        int port = -1;
 
-            /**
-             * @brief Device Name use for QueryDosDevice()
-             */
-            LPTSTR queryDosDeviceName = _T("");
-            
-            /**
-             * @brief Device Names
-             */
-            std::string deviceName = "";
+        /**
+         * @brief Device Name use for QueryDosDevice()
+         */
+        LPTSTR queryDosDeviceName = nullptr;
 
-            /**
-             * @brief Friendly Name
-             */
-            std::string friendlyName = "";
+        /**
+         * @brief Device Names
+         */
+        std::string deviceName;
 
-            // To string
+        /**
+         * @brief Friendly Name
+         */
+        std::string friendlyName;
 
-            /**
-             * @brief To String
-             * 
-             * @return Return string
-             */
-            operator std::string() const
-            {
-                return friendlyName;
-            }
+        // To string
 
-            friend std::ostream& operator << (std::ostream& out, const SerialPortInfo& obj) {
-                return out << (std::string)obj;
-            }
+        /**
+         * @brief To String
+         *
+         * @return Return string
+         */
+        operator std::string() const
+        {
+            return friendlyName;
+        }
+
+        friend std::ostream& operator<<(std::ostream& out, const SerialPortInfo& obj)
+        {
+            return out << (std::string)obj;
+        }
     };
-}
-
+} // namespace SerialPortUtils
 
 //*******************************
 
