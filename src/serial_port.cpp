@@ -1,5 +1,5 @@
+#include "serial_port.h"
 #include <iostream>
-#include <serial_port.h>
 
 namespace SerialPortUtils
 {
@@ -244,14 +244,12 @@ namespace SerialPortUtils
      */
     void SerialPort::close()
     {
-        if (this) {
-            // Lock mutex
-            std::lock_guard<std::mutex> lock(m_mutex);
+        // Lock mutex
+        std::lock_guard<std::mutex> lock(m_mutex);
 
-            if (m_connected) {
-                CloseHandle(m_serialHandle);
-                m_connected = false;
-            }
+        if (m_connected) {
+            CloseHandle(m_serialHandle);
+            m_connected = false;
         }
     }
 
