@@ -1,15 +1,14 @@
-#include <serial_port.h>
 #include <iostream>
-
+#include <serial_port.h>
 
 namespace SerialPortUtils
 {
     /**
      * @brief Collect serial ports information by QueryDosDevice
-     * 
+     *
      * @details
      * 1. Use QueryDosDevice() to collect all hardware names.
-     * 2. Search serial port on hardware names which start with "COM" 
+     * 2. Search serial port on hardware names which start with "COM"
      * 3. Use QueryDosDevice() to get the serial port name
      * 4. Collect all registry value which value names are "FriendlyName".
      * 5. Get the friendly name based on looking up the collected registry values.
@@ -17,7 +16,7 @@ namespace SerialPortUtils
      * Modified from http://www.naughter.com/enumser.html
      *
      * @return Return the list of serial port information.
-    */
+     */
     std::vector<SerialPortInfo> SerialPort::getSerialPortList()
     {
         std::vector<SerialPortInfo> result;
@@ -27,58 +26,50 @@ namespace SerialPortUtils
         bool stopTosearch = false;
         bool success = true;
         std::vector<TCHAR> devices;
-        while (!stopTosearch)
-        {
+        while (!stopTosearch) {
             // Allocate device buffer
             devices.resize(deviceBufferSize);
 
             // Collect device name
             const DWORD collectDevicesStatus = QueryDosDevice(nullptr, &(devices[0]), deviceBufferSize);
-            if (collectDevicesStatus == 0)
-            {
+            if (collectDevicesStatus == 0) {
                 const DWORD collectDevicesError = GetLastError();
-                if (collectDevicesError == ERROR_INSUFFICIENT_BUFFER)
-                {
-                    //Expand the buffer if insufficient buffer
+                if (collectDevicesError == ERROR_INSUFFICIENT_BUFFER) {
+                    // Expand the buffer if insufficient buffer
                     deviceBufferSize *= 2;
                 }
-                else
-                {
+                else {
                     // Encounter error
                     success = false;
                 }
             }
-            else
-            {
+            else {
                 stopTosearch = true;
             }
         }
 
         // Look up device name
         size_t deviceStartCharLoc = 0;
-        while (devices[deviceStartCharLoc] != _T('\0'))
-        {
-            //Get the current device name
+        while (devices[deviceStartCharLoc] != _T('\0')) {
+            // Get the current device name
             LPTSTR currentDevice = &(devices[deviceStartCharLoc]);
             const size_t currentDeviceNameLen = _tcslen(currentDevice);
 
-            //Search for device name start from "COM"
-            if (currentDeviceNameLen > 3 && _tcsnicmp(currentDevice, _T("COM"), 3) == 0)
-            {
+            // Search for device name start from "COM"
+            if (currentDeviceNameLen > 3 && _tcsnicmp(currentDevice, _T("COM"), 3) == 0) {
                 SerialPortInfo currentSerialPortInfo;
                 // Get the numerical char after "COM"
                 std::string portNumber = "";
                 bool isPort = true;
-                for (size_t i = 3; i < currentDeviceNameLen && isPort; i++)
-                {
+                for (size_t i = 3; i < currentDeviceNameLen && isPort; i++) {
                     isPort = (iswdigit(currentDevice[i]) != 0);
-                    if (isPort) portNumber += (char)currentDevice[i];
+                    if (isPort)
+                        portNumber += (char)currentDevice[i];
                 }
 
                 // If numerical existed
-                if (!portNumber.empty())
-                {
-                    //Get port number
+                if (!portNumber.empty()) {
+                    // Get port number
                     currentSerialPortInfo.port = std::stoi(portNumber);
 
                     // Get Device name
@@ -101,38 +92,31 @@ namespace SerialPortUtils
                 }
             }
 
-            //Move to next device name
+            // Move to next device name
             deviceStartCharLoc += (currentDeviceNameLen + 1);
         }
 
         // Get friendly name
-        if (!result.empty())
-        {
+        if (!result.empty()) {
             // Collect all friendlyNames from registry
             std::vector<std::string> friendNames;
             processRegistryValue(HKEY_LOCAL_MACHINE,
-                "SYSTEM\\CurrentControlSet\\Enum",
-                [&friendNames](std::string valueName, DWORD dataType, unsigned char* data, int dataLen)
-                {
-                    if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ)
-                    {
-                        // Found and convert to string, add to result
-                        std::string dataString(reinterpret_cast<char*>(data), dataLen);
-                        friendNames.push_back(dataString);
-                    }
-                }
-            );
+                                 "SYSTEM\\CurrentControlSet\\Enum",
+                                 [&friendNames](std::string valueName, DWORD dataType, unsigned char* data, int dataLen) {
+                                     if (valueName.compare("FriendlyName") == 0 && dataType == REG_SZ) {
+                                         // Found and convert to string, add to result
+                                         std::string dataString(reinterpret_cast<char*>(data), dataLen);
+                                         friendNames.push_back(dataString);
+                                     }
+                                 });
 
             // Update friendly name
-            for (int i = 0; i < result.size(); i++)
-            {
+            for (int i = 0; i < result.size(); i++) {
                 std::string COMName = "COM" + std::to_string(result[i].port);
 
                 // Search on friendly name
-                for (std::string friendlyName : friendNames)
-                {
-                    if (friendlyName.find(COMName) != std::string::npos)
-                    {
+                for (std::string friendlyName : friendNames) {
+                    if (friendlyName.find(COMName) != std::string::npos) {
                         // Found
                         result[i].friendlyName = friendlyName;
                         break;
@@ -150,8 +134,8 @@ namespace SerialPortUtils
      * @brief Construct a new Serial Port object
      *
      */
-    SerialPort::SerialPort() {
-
+    SerialPort::SerialPort()
+    {
         // Initialize variable
         m_connected = false;
 
@@ -168,7 +152,8 @@ namespace SerialPortUtils
      * @brief Destroy the Serial Port object
      *
      */
-    SerialPort::~SerialPort() {
+    SerialPort::~SerialPort()
+    {
         close();
     }
 
@@ -178,7 +163,7 @@ namespace SerialPortUtils
 
     /**
      * @brief Open Serial Port
-     * 
+     *
      * @param[in] port The Port to be openned.
      * @return Return true if connection success, otherwise return false
      */
@@ -211,8 +196,7 @@ namespace SerialPortUtils
     bool SerialPort::open(std::string port)
     {
         bool result = false;
-        if (!m_connected)
-        {
+        if (!m_connected) {
             // Lock mutex
             std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -220,34 +204,31 @@ namespace SerialPortUtils
 #ifdef _UNICODE
             LPCWSTR portLPCSTR = std::wstring(port.begin(), port.end()).c_str();
 #else
-            LPCSTR portLPCSTR = port.c_str();			
+            LPCSTR portLPCSTR = port.c_str();
 #endif
             m_serialHandle = CreateFile(portLPCSTR,
-                GENERIC_READ | GENERIC_WRITE,
-                0,  // Share mode = no share
-                NULL,  // Security attribute = no security
-                OPEN_EXISTING,
-                0, //FILE_ATTRIBUTE_NORMAL,
-                NULL  // no templates
+                                        GENERIC_READ | GENERIC_WRITE,
+                                        0, // Share mode = no share
+                                        NULL, // Security attribute = no security
+                                        OPEN_EXISTING,
+                                        0, // FILE_ATTRIBUTE_NORMAL,
+                                        NULL // no templates
             );
 
-            if (m_serialHandle != INVALID_HANDLE_VALUE)
-            {
-                // Set parameters 
+            if (m_serialHandle != INVALID_HANDLE_VALUE) {
+                // Set parameters
                 bool setSerialPara = setAllSerialState();
                 bool setTimeout = setTimeoutSetting(m_timeout);
                 bool setBuffer = SetupComm(m_serialHandle, m_rxtxBufferSize, m_rxtxBufferSize); // Set the input and output buffer
-                PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR);   //Reset buffer
+                PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR); // Reset buffer
 
-                if (!setSerialPara || !setTimeout || !setBuffer)
-                {
+                if (!setSerialPara || !setTimeout || !setBuffer) {
                     // Fail to set parameters
                     CloseHandle(m_serialHandle);
                     m_connected = false;
                     result = false;
                 }
-                else
-                {
+                else {
                     m_connected = true;
                     result = true;
                 }
@@ -255,7 +236,6 @@ namespace SerialPortUtils
         }
 
         return result;
-
     }
 
     /**
@@ -264,13 +244,11 @@ namespace SerialPortUtils
      */
     void SerialPort::close()
     {
-        if (this)
-        {
+        if (this) {
             // Lock mutex
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            if (m_connected)
-            {
+            if (m_connected) {
                 CloseHandle(m_serialHandle);
                 m_connected = false;
             }
@@ -281,7 +259,6 @@ namespace SerialPortUtils
 
 #pragma region Setting
 
-
     /**
      * @brief Set all serial port state
      *
@@ -289,19 +266,20 @@ namespace SerialPortUtils
      */
     bool SerialPort::setAllSerialState()
     {
-        return setSerialStateDecorator([this](DCB& serialParams)
-            {
+        return setSerialStateDecorator(
+            [this](DCB& serialParams) {
                 serialParams.BaudRate = m_baudRate;
                 serialParams.ByteSize = m_byteSize;
                 serialParams.StopBits = m_stopBits;
                 serialParams.Parity = m_parity;
-                if (m_endOfChar != 0) serialParams.EofChar = m_endOfChar;
+                if (m_endOfChar != 0)
+                    serialParams.EofChar = m_endOfChar;
 
                 // Set flow control
                 this->setFlowControlSubFunc(serialParams, m_flowControl);
             },
-            false   // do not reset buffer
-                );
+            false // do not reset buffer
+        );
     }
 
     /**
@@ -313,8 +291,7 @@ namespace SerialPortUtils
     void SerialPort::setFlowControlSubFunc(DCB& serialParams, int flowControl)
     {
         // Set Flow control
-        if (flowControl == SERIAL_PORT_FCTL_NONE)
-        {
+        if (flowControl == SERIAL_PORT_FCTL_NONE) {
             // No flow control
             serialParams.fOutX = false;
             serialParams.fInX = false;
@@ -324,8 +301,7 @@ namespace SerialPortUtils
             serialParams.fRtsControl = RTS_CONTROL_DISABLE;
             serialParams.fDtrControl = DTR_CONTROL_DISABLE;
         }
-        else if (flowControl == SERIAL_PORT_FCTL_XON_XOFF)
-        {
+        else if (flowControl == SERIAL_PORT_FCTL_XON_XOFF) {
             // Xon/Xoff flow control
             serialParams.fOutX = true;
             serialParams.fInX = true;
@@ -335,8 +311,7 @@ namespace SerialPortUtils
             serialParams.fRtsControl = RTS_CONTROL_DISABLE;
             serialParams.fDtrControl = DTR_CONTROL_DISABLE;
         }
-        else if (flowControl == SERIAL_PORT_FCTL_HARDWARE)
-        {
+        else if (flowControl == SERIAL_PORT_FCTL_HARDWARE) {
             // Hardware flow control
             serialParams.fOutX = false;
             serialParams.fInX = false;
@@ -358,10 +333,9 @@ namespace SerialPortUtils
         bool result = false;
 
         // Get timeouts
-        COMMTIMEOUTS commTimeout = { 0 };
+        COMMTIMEOUTS commTimeout = {0};
         result = GetCommTimeouts(m_serialHandle, &commTimeout);
-        if (result)
-        {
+        if (result) {
             commTimeout.ReadIntervalTimeout = MAXDWORD;
             commTimeout.ReadTotalTimeoutConstant = timeout;
             commTimeout.ReadTotalTimeoutMultiplier = 0;
@@ -380,15 +354,13 @@ namespace SerialPortUtils
      */
     void SerialPort::resetBuffer()
     {
-        if (m_connected)
-        {
+        if (m_connected) {
             // Lock mutex
             std::lock_guard<std::mutex> lock(m_mutex);
 
             // Reset
             PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR);
         }
-
     }
 
 #pragma endregion Setting
@@ -403,20 +375,10 @@ namespace SerialPortUtils
      */
     bool SerialPort::setBaudRate(int baudRate)
     {
-        if (baudRate != CBR_110 &&
-            baudRate != CBR_300 &&
-            baudRate != CBR_600 &&
-            baudRate != CBR_1200 &&
-            baudRate != CBR_2400 &&
-            baudRate != CBR_4800 &&
-            baudRate != CBR_9600 &&
-            baudRate != CBR_14400 &&
-            baudRate != CBR_19200 &&
-            baudRate != CBR_38400 &&
-            baudRate != CBR_57600 &&
-            baudRate != CBR_115200 &&
-            baudRate != CBR_128000 &&
-            baudRate != CBR_256000)
+        if (baudRate != CBR_110 && baudRate != CBR_300 && baudRate != CBR_600 && baudRate != CBR_1200 && baudRate != CBR_2400
+            && baudRate != CBR_4800 && baudRate != CBR_9600 && baudRate != CBR_14400 && baudRate != CBR_19200
+            && baudRate != CBR_38400 && baudRate != CBR_57600 && baudRate != CBR_115200 && baudRate != CBR_128000
+            && baudRate != CBR_256000)
             throw std::invalid_argument("baudRate(" + std::to_string(baudRate) + ") is invalid.");
 
         bool result = false;
@@ -425,29 +387,23 @@ namespace SerialPortUtils
         std::lock_guard<std::mutex> lock(m_mutex);
 
         // Set
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator([baudRate](DCB& serialParams)
-                {
-                    serialParams.BaudRate = baudRate;
-                }
-            );
+            result = setSerialStateDecorator([baudRate](DCB& serialParams) { serialParams.BaudRate = baudRate; });
 
             // If success
-            if (result) m_baudRate = baudRate;
+            if (result)
+                m_baudRate = baudRate;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_baudRate = baudRate;
             result = true;
         }
 
         return result;
-
     }
 
     /**
@@ -478,22 +434,17 @@ namespace SerialPortUtils
         std::lock_guard<std::mutex> lock(m_mutex);
 
         // Set
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator([byteSize](DCB& serialParams)
-                {
-                    serialParams.ByteSize = byteSize;
-                }
-            );
+            result = setSerialStateDecorator([byteSize](DCB& serialParams) { serialParams.ByteSize = byteSize; });
 
             // If success
-            if (result) m_byteSize = byteSize;
+            if (result)
+                m_byteSize = byteSize;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_byteSize = byteSize;
             result = true;
@@ -531,22 +482,17 @@ namespace SerialPortUtils
         std::lock_guard<std::mutex> lock(m_mutex);
 
         // Set
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator([stopBits](DCB& serialParams)
-                {
-                    serialParams.StopBits = stopBits;
-                }
-            );
+            result = setSerialStateDecorator([stopBits](DCB& serialParams) { serialParams.StopBits = stopBits; });
 
             // If success
-            if (result) m_stopBits = stopBits;
+            if (result)
+                m_stopBits = stopBits;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_stopBits = stopBits;
             result = true;
@@ -566,20 +512,17 @@ namespace SerialPortUtils
     }
 
     /**
- * @brief Set parity
- *
- * @param[in] parity It must be NOPARITY, ODDPARITY, EVENPARITY, MARKPARITY or SPACEPARITY
- * @return Return true if success
- */
+     * @brief Set parity
+     *
+     * @param[in] parity It must be NOPARITY, ODDPARITY, EVENPARITY, MARKPARITY or SPACEPARITY
+     * @return Return true if success
+     */
     bool SerialPort::setParity(int parity)
     {
         // Check
-        if (parity != NOPARITY &&
-            parity != ODDPARITY &&
-            parity != EVENPARITY &&
-            parity != MARKPARITY &&
-            parity != SPACEPARITY)
-            throw std::invalid_argument("stopBits(" + std::to_string(parity) + ") must be NOPARITY, EVENPARITY, MARKPARITY or SPACEPARITY.");
+        if (parity != NOPARITY && parity != ODDPARITY && parity != EVENPARITY && parity != MARKPARITY && parity != SPACEPARITY)
+            throw std::invalid_argument("stopBits(" + std::to_string(parity)
+                                        + ") must be NOPARITY, EVENPARITY, MARKPARITY or SPACEPARITY.");
 
         // Initlialize variable
         bool result = false;
@@ -588,22 +531,17 @@ namespace SerialPortUtils
         std::lock_guard<std::mutex> lock(m_mutex);
 
         // Set
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator([parity](DCB& serialParams)
-                {
-                    serialParams.Parity = parity;
-                }
-            );
+            result = setSerialStateDecorator([parity](DCB& serialParams) { serialParams.Parity = parity; });
 
             // If success
-            if (result) m_parity = parity;
+            if (result)
+                m_parity = parity;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_parity = parity;
             result = true;
@@ -631,30 +569,29 @@ namespace SerialPortUtils
     bool SerialPort::setFlowControl(int flowControl)
     {
         // Check
-        if (flowControl != SERIAL_PORT_FCTL_NONE && flowControl != SERIAL_PORT_FCTL_XON_XOFF && flowControl != SERIAL_PORT_FCTL_HARDWARE)
-            throw std::invalid_argument("flowControl(" + std::to_string(flowControl) + ") must be SERIAL_PORT_FCTL_NONE, SERIAL_PORT_FCTL_XON_XOFF or SERIAL_PORT_FCTL_HARDWARE.");
+        if (flowControl != SERIAL_PORT_FCTL_NONE && flowControl != SERIAL_PORT_FCTL_XON_XOFF
+            && flowControl != SERIAL_PORT_FCTL_HARDWARE)
+            throw std::invalid_argument(
+                "flowControl(" + std::to_string(flowControl)
+                + ") must be SERIAL_PORT_FCTL_NONE, SERIAL_PORT_FCTL_XON_XOFF or SERIAL_PORT_FCTL_HARDWARE.");
 
         bool result = false;
 
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator([this, flowControl](DCB& serialParams)
-                {
-                    setFlowControlSubFunc(serialParams, flowControl);
-                }
-            );
+            result = setSerialStateDecorator(
+                [this, flowControl](DCB& serialParams) { setFlowControlSubFunc(serialParams, flowControl); });
 
             // If success
-            if (result) m_flowControl = flowControl;
+            if (result)
+                m_flowControl = flowControl;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_flowControl = flowControl;
             result = true;
@@ -686,23 +623,17 @@ namespace SerialPortUtils
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
-            result = setSerialStateDecorator(
-                [endOfChar](DCB& serialParams)
-                {
-                    serialParams.EofChar = endOfChar;
-                }
-            );
+            result = setSerialStateDecorator([endOfChar](DCB& serialParams) { serialParams.EofChar = endOfChar; });
 
             // If success
-            if (result) m_endOfChar = endOfChar;
+            if (result)
+                m_endOfChar = endOfChar;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_endOfChar = endOfChar;
             result = true;
@@ -738,18 +669,17 @@ namespace SerialPortUtils
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
             result = setTimeoutSetting(timeout);
 
             // If success
-            if (result) m_timeout = timeout;
+            if (result)
+                m_timeout = timeout;
         }
-        else
-        {
+        else {
             // Serial not connect
             m_timeout = timeout;
             result = true;
@@ -773,7 +703,7 @@ namespace SerialPortUtils
      *
      * @param bufferSize Buffer size in bytes.
      * @return Return true if success.
-    */
+     */
     bool SerialPort::setRxTxBufferSize(int bufferSize)
     {
         // Exception
@@ -785,22 +715,19 @@ namespace SerialPortUtils
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             // Serial connected
 
             // Set
             result = SetupComm(m_serialHandle, bufferSize, bufferSize); // Set the input and output buffer
 
             // If success
-            if (result)
-            {
+            if (result) {
                 m_rxtxBufferSize = bufferSize;
-                PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR);   //Reset buffer
+                PurgeComm(m_serialHandle, PURGE_TXCLEAR | PURGE_RXCLEAR); // Reset buffer
             }
         }
-        else
-        {
+        else {
             // Serial not connect
             m_rxtxBufferSize = bufferSize;
             result = true;
@@ -813,7 +740,7 @@ namespace SerialPortUtils
      * @brief Get the Rxtx hardware buffer size.
      *
      * @return
-    */
+     */
     int SerialPort::getRxTxBufferSize()
     {
         return m_rxtxBufferSize;
@@ -850,7 +777,8 @@ namespace SerialPortUtils
 
         // Send byte
         int n = sendBytes(buffer.get(), (int)ascii.length());
-        if (n == ascii.length()) result = true;
+        if (n == ascii.length())
+            result = true;
 
         return result;
     }
@@ -869,8 +797,7 @@ namespace SerialPortUtils
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             int n;
             if (WriteFile(m_serialHandle, buffer, bufferSize, (LPDWORD)((void*)&n), NULL))
                 result = n;
@@ -881,7 +808,7 @@ namespace SerialPortUtils
         return result;
     }
 
-        /**
+    /**
      * @brief Read ASCII from serial port. Buffer size = 1024 byte
      *
      * @return Return the ASCII string. If connection fail or no bytes collected, return a empty string.
@@ -901,16 +828,15 @@ namespace SerialPortUtils
     {
         // Read
         std::unique_ptr<unsigned char[]> buffer = std::unique_ptr<unsigned char[]>(new unsigned char[strBufferSize]);
-        //unsigned char* buffer = new unsigned char[strBufferSize]();
+        // unsigned char* buffer = new unsigned char[strBufferSize]();
         int n = readBytes(buffer.get(), strBufferSize);
 
-        //Parse to string
+        // Parse to string
         std::string result = std::string();
-        if (n > 0)
-        {
+        if (n > 0) {
             result = std::string(reinterpret_cast<char*>(buffer.get()), n);
         }
-        //delete[] buffer;
+        // delete[] buffer;
 
         return result;
     }
@@ -929,21 +855,24 @@ namespace SerialPortUtils
         // Lock mutex
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        if (m_connected)
-        {
+        if (m_connected) {
             // Reset buffer
             buffer[0] = '\0';
 
             // Read
             int n;
-            if (ReadFile(m_serialHandle, buffer, bufferSize - 1, (LPDWORD)((void*)&n), NULL)) // The nNumberOfBytesToRead is bufferSize-1 instead of bufferSize because a '\0' may be added at Ipbuffer[n-1]
+            if (ReadFile(m_serialHandle,
+                         buffer,
+                         bufferSize - 1,
+                         (LPDWORD)((void*)&n),
+                         NULL)) // The nNumberOfBytesToRead is bufferSize-1 instead of bufferSize because a '\0' may be added at
+                                // Ipbuffer[n-1]
             {
                 // Add end of string
                 buffer[n] = '\0';
                 result = n;
             }
-            else
-            {
+            else {
                 // Reset buffer
                 buffer[0] = '\0';
 
@@ -956,4 +885,4 @@ namespace SerialPortUtils
 
 #pragma endregion Transmission
 
-}
+} // namespace SerialPortUtils
