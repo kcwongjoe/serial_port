@@ -85,9 +85,6 @@ namespace SerialPortUtils
         bool setFlowControl(int flowControl);
         int getFlowControl();
 
-        bool setEndOfChar(char endOfChar);
-        char getEndOfChar();
-
         bool setTimeout(int timeout);
         int getTimeout();
 
