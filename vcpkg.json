@@ -1,0 +1,8 @@
+{
+    "name": "serial_port",
+    "version": "1.0",
+    "port-version": 0,
+    "description": "A simple windows only serial port library",
+    "homepage": "https://github.com/Crzyrndm/serial_port",
+    "dependencies": []
+}
